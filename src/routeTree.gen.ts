@@ -9,10 +9,22 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as LayersRouteRouteImport } from './routes/layers/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PostsIndexRouteImport } from './routes/posts/index'
+import { Route as MiddlewareDemoIndexRouteImport } from './routes/middleware-demo/index'
+import { Route as LayersIndexRouteImport } from './routes/layers/index'
+import { Route as LayersDemoRouteRouteImport } from './routes/layers/demo/route'
 import { Route as PostsCreateIndexRouteImport } from './routes/posts/create/index'
+import { Route as PostsPostIdIndexRouteImport } from './routes/posts/$postId/index'
+import { Route as LayersDemoIndexRouteImport } from './routes/layers/demo/index'
+import { Route as LayersDemoCanvasIndexRouteImport } from './routes/layers/demo/canvas/index'
 
+const LayersRouteRoute = LayersRouteRouteImport.update({
+  id: '/layers',
+  path: '/layers',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -23,44 +35,132 @@ const PostsIndexRoute = PostsIndexRouteImport.update({
   path: '/posts/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MiddlewareDemoIndexRoute = MiddlewareDemoIndexRouteImport.update({
+  id: '/middleware-demo/',
+  path: '/middleware-demo/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LayersIndexRoute = LayersIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => LayersRouteRoute,
+} as any)
+const LayersDemoRouteRoute = LayersDemoRouteRouteImport.update({
+  id: '/demo',
+  path: '/demo',
+  getParentRoute: () => LayersRouteRoute,
+} as any)
 const PostsCreateIndexRoute = PostsCreateIndexRouteImport.update({
   id: '/posts/create/',
   path: '/posts/create/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PostsPostIdIndexRoute = PostsPostIdIndexRouteImport.update({
+  id: '/posts/$postId/',
+  path: '/posts/$postId/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LayersDemoIndexRoute = LayersDemoIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => LayersDemoRouteRoute,
+} as any)
+const LayersDemoCanvasIndexRoute = LayersDemoCanvasIndexRouteImport.update({
+  id: '/canvas/',
+  path: '/canvas/',
+  getParentRoute: () => LayersDemoRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/layers': typeof LayersRouteRouteWithChildren
+  '/layers/demo': typeof LayersDemoRouteRouteWithChildren
+  '/layers/': typeof LayersIndexRoute
+  '/middleware-demo': typeof MiddlewareDemoIndexRoute
   '/posts': typeof PostsIndexRoute
+  '/layers/demo/': typeof LayersDemoIndexRoute
+  '/posts/$postId': typeof PostsPostIdIndexRoute
   '/posts/create': typeof PostsCreateIndexRoute
+  '/layers/demo/canvas': typeof LayersDemoCanvasIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/layers': typeof LayersIndexRoute
+  '/middleware-demo': typeof MiddlewareDemoIndexRoute
   '/posts': typeof PostsIndexRoute
+  '/layers/demo': typeof LayersDemoIndexRoute
+  '/posts/$postId': typeof PostsPostIdIndexRoute
   '/posts/create': typeof PostsCreateIndexRoute
+  '/layers/demo/canvas': typeof LayersDemoCanvasIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/layers': typeof LayersRouteRouteWithChildren
+  '/layers/demo': typeof LayersDemoRouteRouteWithChildren
+  '/layers/': typeof LayersIndexRoute
+  '/middleware-demo/': typeof MiddlewareDemoIndexRoute
   '/posts/': typeof PostsIndexRoute
+  '/layers/demo/': typeof LayersDemoIndexRoute
+  '/posts/$postId/': typeof PostsPostIdIndexRoute
   '/posts/create/': typeof PostsCreateIndexRoute
+  '/layers/demo/canvas/': typeof LayersDemoCanvasIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/posts' | '/posts/create'
+  fullPaths:
+    | '/'
+    | '/layers'
+    | '/layers/demo'
+    | '/layers/'
+    | '/middleware-demo'
+    | '/posts'
+    | '/layers/demo/'
+    | '/posts/$postId'
+    | '/posts/create'
+    | '/layers/demo/canvas'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/posts' | '/posts/create'
-  id: '__root__' | '/' | '/posts/' | '/posts/create/'
+  to:
+    | '/'
+    | '/layers'
+    | '/middleware-demo'
+    | '/posts'
+    | '/layers/demo'
+    | '/posts/$postId'
+    | '/posts/create'
+    | '/layers/demo/canvas'
+  id:
+    | '__root__'
+    | '/'
+    | '/layers'
+    | '/layers/demo'
+    | '/layers/'
+    | '/middleware-demo/'
+    | '/posts/'
+    | '/layers/demo/'
+    | '/posts/$postId/'
+    | '/posts/create/'
+    | '/layers/demo/canvas/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  LayersRouteRoute: typeof LayersRouteRouteWithChildren
+  MiddlewareDemoIndexRoute: typeof MiddlewareDemoIndexRoute
   PostsIndexRoute: typeof PostsIndexRoute
+  PostsPostIdIndexRoute: typeof PostsPostIdIndexRoute
   PostsCreateIndexRoute: typeof PostsCreateIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/layers': {
+      id: '/layers'
+      path: '/layers'
+      fullPath: '/layers'
+      preLoaderRoute: typeof LayersRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -75,6 +175,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PostsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/middleware-demo/': {
+      id: '/middleware-demo/'
+      path: '/middleware-demo'
+      fullPath: '/middleware-demo'
+      preLoaderRoute: typeof MiddlewareDemoIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/layers/': {
+      id: '/layers/'
+      path: '/'
+      fullPath: '/layers/'
+      preLoaderRoute: typeof LayersIndexRouteImport
+      parentRoute: typeof LayersRouteRoute
+    }
+    '/layers/demo': {
+      id: '/layers/demo'
+      path: '/demo'
+      fullPath: '/layers/demo'
+      preLoaderRoute: typeof LayersDemoRouteRouteImport
+      parentRoute: typeof LayersRouteRoute
+    }
     '/posts/create/': {
       id: '/posts/create/'
       path: '/posts/create'
@@ -82,12 +203,64 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PostsCreateIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/posts/$postId/': {
+      id: '/posts/$postId/'
+      path: '/posts/$postId'
+      fullPath: '/posts/$postId'
+      preLoaderRoute: typeof PostsPostIdIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/layers/demo/': {
+      id: '/layers/demo/'
+      path: '/'
+      fullPath: '/layers/demo/'
+      preLoaderRoute: typeof LayersDemoIndexRouteImport
+      parentRoute: typeof LayersDemoRouteRoute
+    }
+    '/layers/demo/canvas/': {
+      id: '/layers/demo/canvas/'
+      path: '/canvas'
+      fullPath: '/layers/demo/canvas'
+      preLoaderRoute: typeof LayersDemoCanvasIndexRouteImport
+      parentRoute: typeof LayersDemoRouteRoute
+    }
   }
 }
 
+interface LayersDemoRouteRouteChildren {
+  LayersDemoIndexRoute: typeof LayersDemoIndexRoute
+  LayersDemoCanvasIndexRoute: typeof LayersDemoCanvasIndexRoute
+}
+
+const LayersDemoRouteRouteChildren: LayersDemoRouteRouteChildren = {
+  LayersDemoIndexRoute: LayersDemoIndexRoute,
+  LayersDemoCanvasIndexRoute: LayersDemoCanvasIndexRoute,
+}
+
+const LayersDemoRouteRouteWithChildren = LayersDemoRouteRoute._addFileChildren(
+  LayersDemoRouteRouteChildren,
+)
+
+interface LayersRouteRouteChildren {
+  LayersDemoRouteRoute: typeof LayersDemoRouteRouteWithChildren
+  LayersIndexRoute: typeof LayersIndexRoute
+}
+
+const LayersRouteRouteChildren: LayersRouteRouteChildren = {
+  LayersDemoRouteRoute: LayersDemoRouteRouteWithChildren,
+  LayersIndexRoute: LayersIndexRoute,
+}
+
+const LayersRouteRouteWithChildren = LayersRouteRoute._addFileChildren(
+  LayersRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  LayersRouteRoute: LayersRouteRouteWithChildren,
+  MiddlewareDemoIndexRoute: MiddlewareDemoIndexRoute,
   PostsIndexRoute: PostsIndexRoute,
+  PostsPostIdIndexRoute: PostsPostIdIndexRoute,
   PostsCreateIndexRoute: PostsCreateIndexRoute,
 }
 export const routeTree = rootRouteImport

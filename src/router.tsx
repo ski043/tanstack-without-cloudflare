@@ -1,4 +1,5 @@
 import { createRouter } from '@tanstack/react-router'
+import type { DemoAuthContext } from '@/middleware/demo'
 
 // Import the generated route tree
 import { routeTree } from './routeTree.gen'
@@ -9,6 +10,12 @@ export const getRouter = () => {
     routeTree,
     scrollRestoration: true,
     defaultPreloadStaleTime: 0,
+    context: {
+      demoAuth: {
+        tokenProvided: false,
+        isAuthorized: false,
+      },
+    } satisfies DemoAuthContext,
   })
 
   return router
