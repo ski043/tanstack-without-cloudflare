@@ -38,6 +38,13 @@ const routes = [
     accent:
       'from-purple-400/20 via-purple-300/10 to-background border-purple-400/40',
   },
+  {
+    title: 'Server Routes',
+    description: 'API-style GET/POST handlers living next to your UI.',
+    to: '/server-demo',
+    accent:
+      'from-amber-400/20 via-amber-200/10 to-background border-amber-400/40',
+  },
 ]
 
 export const Route = createFileRoute('/')({
@@ -46,10 +53,10 @@ export const Route = createFileRoute('/')({
 
 function App() {
   return (
-    <div className="relative isolate min-h-[100dvh] overflow-hidden bg-gradient-to-b from-background via-background to-muted/40">
+    <div className="relative isolate min-h-dvh overflow-hidden bg-linear-to-b from-background via-background to-muted/40">
       <div className="pointer-events-none absolute inset-0 -z-10 opacity-70">
         <div className="absolute -top-32 right-10 h-72 w-72 rounded-full bg-primary/30 blur-[120px]" />
-        <div className="absolute bottom-10 left-0 h-[28rem] w-[28rem] rounded-full bg-pink-400/25 blur-[150px]" />
+        <div className="absolute bottom-10 left-0 h-112 w-md rounded-full bg-pink-400/25 blur-[150px]" />
       </div>
 
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-10 px-4 py-16">
@@ -84,7 +91,7 @@ function App() {
           {routes.map((route) => (
             <Card
               key={route.to}
-              className={`group flex flex-col justify-between rounded-[28px] border bg-gradient-to-br p-6 shadow-lg shadow-black/5 backdrop-blur ${route.accent}`}
+              className={`group flex flex-col justify-between rounded-[28px] border bg-linear-to-br p-6 shadow-lg shadow-black/5 backdrop-blur ${route.accent}`}
             >
               <CardHeader className="space-y-3 p-0">
                 <CardTitle className="text-2xl font-semibold text-foreground">
