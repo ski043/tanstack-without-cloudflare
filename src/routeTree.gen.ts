@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LayersRouteRouteImport } from './routes/layers/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ServerDemoIndexRouteImport } from './routes/server-demo/index'
+import { Route as SearchParamsIndexRouteImport } from './routes/search-params/index'
 import { Route as PostsIndexRouteImport } from './routes/posts/index'
 import { Route as MiddlewareDemoIndexRouteImport } from './routes/middleware-demo/index'
 import { Route as LayersIndexRouteImport } from './routes/layers/index'
@@ -34,6 +35,11 @@ const IndexRoute = IndexRouteImport.update({
 const ServerDemoIndexRoute = ServerDemoIndexRouteImport.update({
   id: '/server-demo/',
   path: '/server-demo/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SearchParamsIndexRoute = SearchParamsIndexRouteImport.update({
+  id: '/search-params/',
+  path: '/search-params/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PostsIndexRoute = PostsIndexRouteImport.update({
@@ -84,6 +90,7 @@ export interface FileRoutesByFullPath {
   '/layers/': typeof LayersIndexRoute
   '/middleware-demo': typeof MiddlewareDemoIndexRoute
   '/posts': typeof PostsIndexRoute
+  '/search-params': typeof SearchParamsIndexRoute
   '/server-demo': typeof ServerDemoIndexRoute
   '/layers/demo/': typeof LayersDemoIndexRoute
   '/posts/$postId': typeof PostsPostIdIndexRoute
@@ -95,6 +102,7 @@ export interface FileRoutesByTo {
   '/layers': typeof LayersIndexRoute
   '/middleware-demo': typeof MiddlewareDemoIndexRoute
   '/posts': typeof PostsIndexRoute
+  '/search-params': typeof SearchParamsIndexRoute
   '/server-demo': typeof ServerDemoIndexRoute
   '/layers/demo': typeof LayersDemoIndexRoute
   '/posts/$postId': typeof PostsPostIdIndexRoute
@@ -109,6 +117,7 @@ export interface FileRoutesById {
   '/layers/': typeof LayersIndexRoute
   '/middleware-demo/': typeof MiddlewareDemoIndexRoute
   '/posts/': typeof PostsIndexRoute
+  '/search-params/': typeof SearchParamsIndexRoute
   '/server-demo/': typeof ServerDemoIndexRoute
   '/layers/demo/': typeof LayersDemoIndexRoute
   '/posts/$postId/': typeof PostsPostIdIndexRoute
@@ -124,6 +133,7 @@ export interface FileRouteTypes {
     | '/layers/'
     | '/middleware-demo'
     | '/posts'
+    | '/search-params'
     | '/server-demo'
     | '/layers/demo/'
     | '/posts/$postId'
@@ -135,6 +145,7 @@ export interface FileRouteTypes {
     | '/layers'
     | '/middleware-demo'
     | '/posts'
+    | '/search-params'
     | '/server-demo'
     | '/layers/demo'
     | '/posts/$postId'
@@ -148,6 +159,7 @@ export interface FileRouteTypes {
     | '/layers/'
     | '/middleware-demo/'
     | '/posts/'
+    | '/search-params/'
     | '/server-demo/'
     | '/layers/demo/'
     | '/posts/$postId/'
@@ -160,6 +172,7 @@ export interface RootRouteChildren {
   LayersRouteRoute: typeof LayersRouteRouteWithChildren
   MiddlewareDemoIndexRoute: typeof MiddlewareDemoIndexRoute
   PostsIndexRoute: typeof PostsIndexRoute
+  SearchParamsIndexRoute: typeof SearchParamsIndexRoute
   ServerDemoIndexRoute: typeof ServerDemoIndexRoute
   PostsPostIdIndexRoute: typeof PostsPostIdIndexRoute
   PostsCreateIndexRoute: typeof PostsCreateIndexRoute
@@ -186,6 +199,13 @@ declare module '@tanstack/react-router' {
       path: '/server-demo'
       fullPath: '/server-demo'
       preLoaderRoute: typeof ServerDemoIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/search-params/': {
+      id: '/search-params/'
+      path: '/search-params'
+      fullPath: '/search-params'
+      preLoaderRoute: typeof SearchParamsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/posts/': {
@@ -280,6 +300,7 @@ const rootRouteChildren: RootRouteChildren = {
   LayersRouteRoute: LayersRouteRouteWithChildren,
   MiddlewareDemoIndexRoute: MiddlewareDemoIndexRoute,
   PostsIndexRoute: PostsIndexRoute,
+  SearchParamsIndexRoute: SearchParamsIndexRoute,
   ServerDemoIndexRoute: ServerDemoIndexRoute,
   PostsPostIdIndexRoute: PostsPostIdIndexRoute,
   PostsCreateIndexRoute: PostsCreateIndexRoute,

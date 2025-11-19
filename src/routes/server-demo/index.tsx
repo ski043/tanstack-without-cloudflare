@@ -1,24 +1,19 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useState, useTransition } from 'react'
-import { z } from 'zod'
-import { zodValidator } from '@tanstack/zod-adapter'
-
-import { Button } from '@/components/ui/button'
+import { useState } from 'react'
 import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-
-const demoSearchSchema = z.object({
-  topic: z.string().optional(),
-})
+import { Label } from '@/components/ui/label'
 
 export const Route = createFileRoute('/server-demo/')({
-  validateSearch: zodValidator(demoSearchSchema),
+  component: RouteComponent,
   server: {
     handlers: ({ createHandlers }) =>
       createHandlers({
@@ -47,147 +42,178 @@ export const Route = createFileRoute('/server-demo/')({
         },
       }),
   },
-  component: ServerRouteDemo,
 })
 
-function ServerRouteDemo() {
+function RouteComponent() {
+  // GET Request State
   const [getResult, setGetResult] = useState<string>('')
   const [getError, setGetError] = useState<string | null>(null)
-  const [postTopic, setPostTopic] = useState('Middleware best practices')
+  const [isGetFetching, setIsGetFetching] = useState(false)
+
+  // POST Request State
+  const [postInput, setPostInput] = useState('')
   const [postResult, setPostResult] = useState<string>('')
   const [postError, setPostError] = useState<string | null>(null)
-  const [isPosting, startPostTransition] = useTransition()
-  const [isFetching, setIsFetching] = useState(false)
+  const [isPostFetching, setIsPostFetching] = useState(false)
 
-  async function callStatusEndpoint() {
-    setIsFetching(true)
+  async function handleGet() {
+    setIsGetFetching(true)
     setGetError(null)
     try {
       const res = await fetch('/server-demo')
-      if (!res.ok) {
-        throw new Error(`Request failed with ${res.status}`)
-      }
+      if (!res.ok) throw new Error(`Request failed with ${res.status}`)
       const data = await res.json()
       setGetResult(JSON.stringify(data, null, 2))
     } catch (err) {
       setGetError(err instanceof Error ? err.message : 'Unknown error')
       setGetResult('')
     } finally {
-      setIsFetching(false)
+      setIsGetFetching(false)
     }
   }
 
-  function sendAnnouncement(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault()
+  async function handlePost() {
+    setIsPostFetching(true)
     setPostError(null)
-    startPostTransition(async () => {
-      try {
-        const res = await fetch('/server-demo', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ topic: postTopic }),
-        })
-        if (!res.ok) {
-          throw new Error(`Request failed with ${res.status}`)
-        }
-        const data = await res.json()
-        setPostResult(JSON.stringify(data, null, 2))
-      } catch (err) {
-        setPostError(err instanceof Error ? err.message : 'Unknown error')
-        setPostResult('')
-      }
-    })
+    try {
+      const res = await fetch('/server-demo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ data: postInput }),
+      })
+      if (!res.ok) throw new Error(`Request failed with ${res.status}`)
+      const data = await res.json()
+      setPostResult(JSON.stringify(data, null, 2))
+    } catch (err) {
+      setPostError(err instanceof Error ? err.message : 'Unknown error')
+      setPostResult('')
+    } finally {
+      setIsPostFetching(false)
+    }
   }
 
   return (
     <div className="relative isolate min-h-dvh overflow-hidden bg-linear-to-br from-background via-background to-muted/30">
       <div className="pointer-events-none absolute inset-0 -z-10 opacity-70">
-        <div className="absolute -top-40 left-10 h-72 w-72 rounded-full bg-primary/25 blur-[120px]" />
-        <div className="absolute bottom-0 right-0 h-120 w-120 rounded-full bg-amber-400/25 blur-[150px]" />
+        <div className="absolute -top-40 left-10 h-72 w-72 rounded-full bg-amber-400/20 blur-[120px]" />
+        <div className="absolute bottom-0 right-0 h-120 w-120 rounded-full bg-orange-400/20 blur-[150px]" />
       </div>
 
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-10 px-4 py-16">
         <header className="space-y-4 text-left">
-          <p className="text-xs font-semibold uppercase tracking-[0.4em] text-primary">
-            Server routes
+          <p className="text-xs font-semibold uppercase tracking-[0.4em] text-amber-600 dark:text-amber-400">
+            API Playground
           </p>
           <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-            API-style handlers inside your routes directory
+            Server Functions Demo
           </h1>
-          <p className="text-lg leading-relaxed text-muted-foreground">
-            TanStack Start lets you colocate UI and API endpoints. The GET
-            handler below returns status info while the POST handler echoes
-            announcements after passing through server-side logic.
+          <p className="text-lg leading-relaxed text-muted-foreground sm:max-w-2xl">
+            Experience seamless client-server communication. These cards demonstrate how TanStack Start handles API-style requests directly within your route handlers.
           </p>
         </header>
 
-        <div className="grid gap-6 lg:grid-cols-2">
-          <Card className="border-primary/40 bg-card/90 shadow-xl shadow-primary/10">
+        <div className="grid gap-8 md:grid-cols-2">
+          {/* GET Request Card */}
+          <Card className="flex flex-col border-amber-400/30 bg-card/80 shadow-xl shadow-amber-500/5 backdrop-blur-sm">
             <CardHeader>
-              <CardTitle>GET /server-demo</CardTitle>
+              <CardTitle className="flex items-center gap-2">
+                <span className="rounded-md bg-amber-100 px-2 py-1 text-xs font-bold text-amber-700 dark:bg-amber-900/30 dark:text-amber-300">GET</span>
+                <span>Fetch Data</span>
+              </CardTitle>
               <CardDescription>
-                Fetch live server data with a single click. This hits the GET
-                handler defined in the same file.
+                Retrieve data from the server with a simple function call.
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <Button onClick={callStatusEndpoint} disabled={isFetching}>
-                {isFetching ? 'Requesting…' : 'Call GET endpoint'}
-              </Button>
-              {getError && (
-                <p className="rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
-                  {getError}
-                </p>
-              )}
-              {getResult && (
-                <pre className="rounded-2xl border border-primary/30 bg-primary/5 px-3 py-3 text-xs leading-relaxed">
-                  {getResult}
-                </pre>
-              )}
+            <CardContent className="flex-1">
+              <div className="space-y-4">
+                <div className="relative overflow-hidden rounded-xl border bg-muted/50 p-4 min-h-[140px] font-mono text-sm">
+                  {isGetFetching ? (
+                    <div className="flex h-full items-center justify-center text-muted-foreground">
+                      <div className="h-5 w-5 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                      <span className="ml-2">Fetching...</span>
+                    </div>
+                  ) : getError ? (
+                    <div className="text-destructive p-2 bg-destructive/10 rounded-md border border-destructive/20">
+                      Error: {getError}
+                    </div>
+                  ) : getResult ? (
+                    <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+                      <pre className="text-xs leading-relaxed">{getResult}</pre>
+                    </div>
+                  ) : (
+                    <div className="flex h-full items-center justify-center text-muted-foreground/50 italic">
+                      Waiting for request...
+                    </div>
+                  )}
+                </div>
+              </div>
             </CardContent>
+            <CardFooter>
+              <Button
+                onClick={handleGet}
+                className="w-full bg-amber-500 hover:bg-amber-600 text-white shadow-lg shadow-amber-500/20"
+                disabled={isGetFetching}
+              >
+                Fetch Server Data
+              </Button>
+            </CardFooter>
           </Card>
 
-          <Card className="border-emerald-300/50 bg-card/90 shadow-xl shadow-emerald-500/10">
+          {/* POST Request Card */}
+          <Card className="flex flex-col border-orange-400/30 bg-card/80 shadow-xl shadow-orange-500/5 backdrop-blur-sm">
             <CardHeader>
-              <CardTitle>POST /server-demo</CardTitle>
+              <CardTitle className="flex items-center gap-2">
+                <span className="rounded-md bg-orange-100 px-2 py-1 text-xs font-bold text-orange-700 dark:bg-orange-900/30 dark:text-orange-300">POST</span>
+                <span>Submit Data</span>
+              </CardTitle>
               <CardDescription>
-                Compose an announcement and let the server route acknowledge it.
+                Send a payload to the server and receive a processed response.
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <form className="space-y-4" onSubmit={sendAnnouncement}>
-                <div>
-                  <label className="text-sm font-medium text-muted-foreground">
-                    Topic
-                  </label>
+            <CardContent className="flex-1">
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="message">Message Payload</Label>
                   <Input
-                    value={postTopic}
-                    onChange={(event) => setPostTopic(event.target.value)}
-                    className="mt-2 text-base"
-                    placeholder="Something cool you just shipped"
+                    id="message"
+                    placeholder="Enter a message to send..."
+                    value={postInput}
+                    onChange={(e) => setPostInput(e.target.value)}
+                    className="bg-background/50"
                   />
                 </div>
-                <div className="flex gap-3">
-                  <Button type="submit" disabled={isPosting}>
-                    {isPosting ? 'Sending…' : 'Send POST request'}
-                  </Button>
+                <div className="relative overflow-hidden rounded-xl border bg-muted/50 p-4 min-h-[140px] font-mono text-sm">
+                  {isPostFetching ? (
+                    <div className="flex h-full items-center justify-center text-muted-foreground">
+                      <div className="h-5 w-5 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                      <span className="ml-2">Processing...</span>
+                    </div>
+                  ) : postError ? (
+                    <div className="text-destructive p-2 bg-destructive/10 rounded-md border border-destructive/20">
+                      Error: {postError}
+                    </div>
+                  ) : postResult ? (
+                    <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+                      <div className="mb-2 text-xs font-semibold text-orange-600 dark:text-orange-400">Server Response:</div>
+                      <pre className="text-xs leading-relaxed">{postResult}</pre>
+                    </div>
+                  ) : (
+                    <div className="flex h-full items-center justify-center text-muted-foreground/50 italic">
+                      Response will appear here...
+                    </div>
+                  )}
                 </div>
-              </form>
-
-              {postError && (
-                <p className="mt-4 rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
-                  {postError}
-                </p>
-              )}
-
-              {postResult && (
-                <pre className="mt-4 rounded-2xl border border-emerald-300/50 bg-emerald-400/10 px-3 py-3 text-xs leading-relaxed">
-                  {postResult}
-                </pre>
-              )}
+              </div>
             </CardContent>
+            <CardFooter>
+              <Button
+                onClick={handlePost}
+                className="w-full bg-orange-500 hover:bg-orange-600 text-white shadow-lg shadow-orange-500/20"
+                disabled={isPostFetching || !postInput.trim()}
+              >
+                Send Payload
+              </Button>
+            </CardFooter>
           </Card>
         </div>
       </div>

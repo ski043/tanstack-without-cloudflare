@@ -45,6 +45,13 @@ const routes = [
     accent:
       'from-amber-400/20 via-amber-200/10 to-background border-amber-400/40',
   },
+  {
+    title: 'Search Params',
+    description: 'Type-safe URL state management with Zod validation.',
+    to: '/search-params',
+    accent:
+      'from-cyan-400/20 via-cyan-200/10 to-background border-cyan-400/40',
+  },
 ]
 
 export const Route = createFileRoute('/')({
