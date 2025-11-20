@@ -1,6 +1,5 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
-
-import { Button } from '@/components/ui/button'
+import { buttonVariants } from '@/components/ui/button'
 
 const items = [
   {
@@ -34,12 +33,18 @@ function CanvasRoute() {
         <h3 className="text-3xl font-semibold text-foreground">
           Canvas: the child fills the frame
         </h3>
-        <p className="text-base text-emerald-900/80 dark:text-emerald-50/80">
-          This component is rendered inside the previous two layers. Toggle
-          routes and watch the outer shells stay mounted while only this inner
-          content swaps.
-        </p>
+       <p className="text-base text-emerald-900/80 dark:text-emerald-50/80"> This component is rendered inside the previous two layers. Toggle routes and watch the outer shells stay mounted while only this inner content swaps.</p>
       </div>
+
+      <div className='mt-8 flex flex-wrap gap-3'>
+        <Link to="/layers" className={buttonVariants({ variant: "outline" })}>
+          Back to layer overview
+        </Link>
+        <Link to="/posts/create" className={buttonVariants()}>
+          Create a post next
+        </Link>
+      </div>
+
 
       <div className="mt-8 grid gap-4 md:grid-cols-3">
         {items.map((item) => (
@@ -56,12 +61,12 @@ function CanvasRoute() {
       </div>
 
       <div className="mt-10 flex flex-wrap gap-3">
-        <Button asChild variant="outline">
-          <Link to="/layers">Back to layer overview</Link>
-        </Button>
-        <Button asChild>
-          <Link to="/posts/create">Create a post next</Link>
-        </Button>
+        <Link to="/layers" className={buttonVariants({ variant: "outline" })}>
+          Back to layer overview
+        </Link>
+        <Link to="/posts/create" className={buttonVariants()}>
+          Create a post next
+        </Link>
       </div>
     </div>
   )

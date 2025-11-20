@@ -1,6 +1,6 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
 
-import { Button, buttonVariants } from '@/components/ui/button'
+import { buttonVariants } from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -40,17 +40,17 @@ const routes = [
   },
   {
     title: 'Server Routes',
-    description: 'API-style GET/POST handlers living next to your UI.',
-    to: '/server-demo',
+    description: 'Example of GET and POST requests to server routes.',
+    to: '/server-routes',
     accent:
-      'from-amber-400/20 via-amber-200/10 to-background border-amber-400/40',
+      'from-amber-400/20 via-amber-300/10 to-background border-amber-400/40',
   },
   {
-    title: 'Search Params',
-    description: 'Type-safe URL state management with Zod validation.',
-    to: '/search-params',
+    title: 'Typesafe Params',
+    description: 'Full type-safe search params with Zod validation.',
+    to: '/typesafe-params',
     accent:
-      'from-cyan-400/20 via-cyan-200/10 to-background border-cyan-400/40',
+      'from-indigo-400/20 via-indigo-300/10 to-background border-indigo-400/40',
   },
 ]
 
@@ -85,12 +85,21 @@ function App() {
             </p>
           </div>
           <div className="flex flex-wrap gap-4">
-            <Button asChild size="lg" className="shadow-lg shadow-primary/30">
-              <Link to="/posts">Jump to posts</Link>
-            </Button>
-            <Button asChild variant="outline">
-              <Link to="/posts/create">Create a post</Link>
-            </Button>
+            <Link
+              to="/posts"
+              className={buttonVariants({
+                size: 'lg',
+                className: 'shadow-lg shadow-primary/30',
+              })}
+            >
+              Jump to posts
+            </Link>
+            <Link
+              to="/posts/create"
+              className={buttonVariants({ variant: 'outline' })}
+            >
+              Create a post
+            </Link>
           </div>
         </header>
 

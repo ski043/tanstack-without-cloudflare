@@ -9,19 +9,24 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ServerRoutesRouteImport } from './routes/server-routes'
 import { Route as LayersRouteRouteImport } from './routes/layers/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ServerDemoIndexRouteImport } from './routes/server-demo/index'
-import { Route as SearchParamsIndexRouteImport } from './routes/search-params/index'
 import { Route as PostsIndexRouteImport } from './routes/posts/index'
 import { Route as MiddlewareDemoIndexRouteImport } from './routes/middleware-demo/index'
 import { Route as LayersIndexRouteImport } from './routes/layers/index'
+import { Route as ApiDemoRouteImport } from './routes/api/demo'
 import { Route as LayersDemoRouteRouteImport } from './routes/layers/demo/route'
 import { Route as PostsCreateIndexRouteImport } from './routes/posts/create/index'
 import { Route as PostsPostIdIndexRouteImport } from './routes/posts/$postId/index'
 import { Route as LayersDemoIndexRouteImport } from './routes/layers/demo/index'
 import { Route as LayersDemoCanvasIndexRouteImport } from './routes/layers/demo/canvas/index'
 
+const ServerRoutesRoute = ServerRoutesRouteImport.update({
+  id: '/server-routes',
+  path: '/server-routes',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LayersRouteRoute = LayersRouteRouteImport.update({
   id: '/layers',
   path: '/layers',
@@ -30,16 +35,6 @@ const LayersRouteRoute = LayersRouteRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ServerDemoIndexRoute = ServerDemoIndexRouteImport.update({
-  id: '/server-demo/',
-  path: '/server-demo/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SearchParamsIndexRoute = SearchParamsIndexRouteImport.update({
-  id: '/search-params/',
-  path: '/search-params/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PostsIndexRoute = PostsIndexRouteImport.update({
@@ -56,6 +51,11 @@ const LayersIndexRoute = LayersIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => LayersRouteRoute,
+} as any)
+const ApiDemoRoute = ApiDemoRouteImport.update({
+  id: '/api/demo',
+  path: '/api/demo',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const LayersDemoRouteRoute = LayersDemoRouteRouteImport.update({
   id: '/demo',
@@ -86,12 +86,12 @@ const LayersDemoCanvasIndexRoute = LayersDemoCanvasIndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/layers': typeof LayersRouteRouteWithChildren
+  '/server-routes': typeof ServerRoutesRoute
   '/layers/demo': typeof LayersDemoRouteRouteWithChildren
+  '/api/demo': typeof ApiDemoRoute
   '/layers/': typeof LayersIndexRoute
   '/middleware-demo': typeof MiddlewareDemoIndexRoute
   '/posts': typeof PostsIndexRoute
-  '/search-params': typeof SearchParamsIndexRoute
-  '/server-demo': typeof ServerDemoIndexRoute
   '/layers/demo/': typeof LayersDemoIndexRoute
   '/posts/$postId': typeof PostsPostIdIndexRoute
   '/posts/create': typeof PostsCreateIndexRoute
@@ -99,11 +99,11 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/server-routes': typeof ServerRoutesRoute
+  '/api/demo': typeof ApiDemoRoute
   '/layers': typeof LayersIndexRoute
   '/middleware-demo': typeof MiddlewareDemoIndexRoute
   '/posts': typeof PostsIndexRoute
-  '/search-params': typeof SearchParamsIndexRoute
-  '/server-demo': typeof ServerDemoIndexRoute
   '/layers/demo': typeof LayersDemoIndexRoute
   '/posts/$postId': typeof PostsPostIdIndexRoute
   '/posts/create': typeof PostsCreateIndexRoute
@@ -113,12 +113,12 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/layers': typeof LayersRouteRouteWithChildren
+  '/server-routes': typeof ServerRoutesRoute
   '/layers/demo': typeof LayersDemoRouteRouteWithChildren
+  '/api/demo': typeof ApiDemoRoute
   '/layers/': typeof LayersIndexRoute
   '/middleware-demo/': typeof MiddlewareDemoIndexRoute
   '/posts/': typeof PostsIndexRoute
-  '/search-params/': typeof SearchParamsIndexRoute
-  '/server-demo/': typeof ServerDemoIndexRoute
   '/layers/demo/': typeof LayersDemoIndexRoute
   '/posts/$postId/': typeof PostsPostIdIndexRoute
   '/posts/create/': typeof PostsCreateIndexRoute
@@ -129,12 +129,12 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/layers'
+    | '/server-routes'
     | '/layers/demo'
+    | '/api/demo'
     | '/layers/'
     | '/middleware-demo'
     | '/posts'
-    | '/search-params'
-    | '/server-demo'
     | '/layers/demo/'
     | '/posts/$postId'
     | '/posts/create'
@@ -142,11 +142,11 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/server-routes'
+    | '/api/demo'
     | '/layers'
     | '/middleware-demo'
     | '/posts'
-    | '/search-params'
-    | '/server-demo'
     | '/layers/demo'
     | '/posts/$postId'
     | '/posts/create'
@@ -155,12 +155,12 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/layers'
+    | '/server-routes'
     | '/layers/demo'
+    | '/api/demo'
     | '/layers/'
     | '/middleware-demo/'
     | '/posts/'
-    | '/search-params/'
-    | '/server-demo/'
     | '/layers/demo/'
     | '/posts/$postId/'
     | '/posts/create/'
@@ -170,16 +170,23 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LayersRouteRoute: typeof LayersRouteRouteWithChildren
+  ServerRoutesRoute: typeof ServerRoutesRoute
+  ApiDemoRoute: typeof ApiDemoRoute
   MiddlewareDemoIndexRoute: typeof MiddlewareDemoIndexRoute
   PostsIndexRoute: typeof PostsIndexRoute
-  SearchParamsIndexRoute: typeof SearchParamsIndexRoute
-  ServerDemoIndexRoute: typeof ServerDemoIndexRoute
   PostsPostIdIndexRoute: typeof PostsPostIdIndexRoute
   PostsCreateIndexRoute: typeof PostsCreateIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/server-routes': {
+      id: '/server-routes'
+      path: '/server-routes'
+      fullPath: '/server-routes'
+      preLoaderRoute: typeof ServerRoutesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/layers': {
       id: '/layers'
       path: '/layers'
@@ -192,20 +199,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/server-demo/': {
-      id: '/server-demo/'
-      path: '/server-demo'
-      fullPath: '/server-demo'
-      preLoaderRoute: typeof ServerDemoIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/search-params/': {
-      id: '/search-params/'
-      path: '/search-params'
-      fullPath: '/search-params'
-      preLoaderRoute: typeof SearchParamsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/posts/': {
@@ -228,6 +221,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/layers/'
       preLoaderRoute: typeof LayersIndexRouteImport
       parentRoute: typeof LayersRouteRoute
+    }
+    '/api/demo': {
+      id: '/api/demo'
+      path: '/api/demo'
+      fullPath: '/api/demo'
+      preLoaderRoute: typeof ApiDemoRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/layers/demo': {
       id: '/layers/demo'
@@ -298,10 +298,10 @@ const LayersRouteRouteWithChildren = LayersRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LayersRouteRoute: LayersRouteRouteWithChildren,
+  ServerRoutesRoute: ServerRoutesRoute,
+  ApiDemoRoute: ApiDemoRoute,
   MiddlewareDemoIndexRoute: MiddlewareDemoIndexRoute,
   PostsIndexRoute: PostsIndexRoute,
-  SearchParamsIndexRoute: SearchParamsIndexRoute,
-  ServerDemoIndexRoute: ServerDemoIndexRoute,
   PostsPostIdIndexRoute: PostsPostIdIndexRoute,
   PostsCreateIndexRoute: PostsCreateIndexRoute,
 }
